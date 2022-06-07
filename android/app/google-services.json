@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1049329693199",
+    "project_id": "horastrabalhadas-67787",
+    "storage_bucket": "horastrabalhadas-67787.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049329693199:android:f4ffa4492f913c96df297a",
+        "android_client_info": {
+          "package_name": "com.horastrabalhadas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049329693199-slu3abb3dce7b325andc6isffs9c8pbl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-rSuRUgglo3uwkAuwSw3vDOZVo66BZ54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049329693199-slu3abb3dce7b325andc6isffs9c8pbl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
