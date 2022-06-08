@@ -29,25 +29,8 @@ export default function Routes(props) {
           headerShown: false,
           tabBarLabel: 'Registrar',
           tabBarLabelStyle: {color: '#4A148C', marginBottom: 2,},
-          tabBarIcon: ({color, size, focused }) => (
-            <View>
-              <LinearGradient style={{
-                width: 60,
-                height: 60,
-                borderRadius: 30,
-                marginBottom: 26,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-                elevation: 6,
-                shadowColor: '#9C27B0',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 5,
-              }} start={{ x: 0, y: 1 }} end={{ x: 0, y: 0 }} colors={focused ? ['#D500F9', '#D580F0'] : ['#4A148C', '#D500F9']}>
-                <Ionicons name="add" size={26} color='#FFF'/>
-              </LinearGradient>
-            </View>
+          tabBarIcon: ({focused }) => (
+            <Ionicons name="add-outline" color={focused ? '#D500F9' : '#4A148C'} size={30} />
           ),
         }}/>
         <Tab.Screen name="SignIn" component={SignIn} options={{

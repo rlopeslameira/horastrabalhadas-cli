@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import * as Animatable from "react-native-animatable";
 import { useIsFocused } from '@react-navigation/native';
 import '../../util/calendar';
 import {Calendar} from 'react-native-calendars';
+import { format } from "date-fns";
 
 export default function Home() {
   const isFocused = useIsFocused();
@@ -16,6 +17,10 @@ export default function Home() {
   const loadDay = (date) =>{
     console.log(date);
   }
+
+  useEffect(() => {
+    console.log(format(new Date(), 'yyyy-MM-dd'));
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,8 +54,7 @@ export default function Home() {
             delay={200}>
           <Calendar   
             markingType={'custom'}
-            current={new Date()}
-            markedDates={[]}
+            current={format(new Date(), 'yyyy-MM-dd')}
             onDayPress={loadDay}
             hideExtraDays={true}
             enableSwipeMonths={true}
