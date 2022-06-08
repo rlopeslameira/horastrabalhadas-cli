@@ -1,7 +1,8 @@
-import React from 'react';
-import Routes from './src/Routes';
+import React, {useState, useEffect} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import MainRoute from './src/pages/MainRoute';
 
 const App = () => {
-  return <Routes {...this.props} />;
+  return <NavigationContainer><MainRoute /></NavigationContainer>;
 }
 export default App;

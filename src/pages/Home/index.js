@@ -29,22 +29,22 @@ export default function Home() {
           <Animatable.View
           animation="fadeInRight"
           delay={200}>
-            <Text style={{color: '#FFF', textAlign: "center", padding: 10, fontSize: 20}}>Total de Horas Trabalhadas</Text>
+            <Text style={{color: '#4A148C', textAlign: "center", padding: 10, fontSize: 20}}>Total de Horas Trabalhadas</Text>
             <View style={{
               marginBottom: 10, 
               flexDirection: 'row',
               justifyContent: 'space-between',
               }}>
               <View style={styles.boxHoras}>
-                <Text style={{textAlign: "center"}}>Hoje</Text>
+                <Text style={{textAlign: "center", color: '#FFF'}}>Hoje</Text>
                 <Text style={styles.txtHoras}>4</Text>
               </View>
               <View style={styles.boxHoras}>
-                <Text style={{textAlign: "center"}}>Semana</Text>
+                <Text style={{textAlign: "center", color: '#FFF'}}>Semana</Text>
                 <Text style={styles.txtHoras}>30</Text>
               </View>
               <View style={styles.boxHoras}>
-                <Text style={{textAlign: "center"}}>Mês</Text>
+                <Text style={{textAlign: "center", color: '#FFF'}}>Mês</Text>
                 <Text style={styles.txtHoras}>120</Text>
               </View>
             </View>            
@@ -68,13 +68,12 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
     padding: 10,
     flex: 1,
-    backgroundColor: "#4A148C",
+    backgroundColor: "#FFF",
   },
   boxHoras: {
-    backgroundColor: '#FFF', 
+    backgroundColor: '#4A148C', 
     padding: 4,
     borderRadius: 8,
     flex: 1,
@@ -83,6 +82,7 @@ const styles = StyleSheet.create({
   txtHoras: {
     textAlign: "center",
     fontSize: 24,
+    color: "#FFF",
     fontWeight: 'bold',
   },
   containerHeader: {

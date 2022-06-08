@@ -14,52 +14,34 @@ import auth from '@react-native-firebase/auth';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import LottieView from 'lottie-react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 export default function CreateAccount(props) {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   
   const handleGravar = async () => {
     setIsLoading(true);
 
-    auth().signInWithEmailAndPassword(email, senha)
-    .then((res) => {
-      const { displayName, email, photoURL } = res.user;
-      const user = {displayName, email, photoURL};
-      console.log(user);
-      AsyncStorage.setItem("user", JSON.stringify(user)).then(() => {
-        Alert.alert('Login', 'Usuário autenticado com sucesso!');
-        props.navigation.replace('AuthUser');
-      });
-      
+    auth().createUserWithEmailAndPassword(email, senha)
+    .then((user) => {
+      auth().currentUser.updateProfile({displayName: nome});
+      Alert.alert('Cadastro', "Usuário cadastrado com sucesso!");
+      props.navigation.push('SignIn');
+      setIsLoading(false); 
     }).
     catch(error => {
       if (error.code === 'auth/email-already-in-use') {
-        Alert.alert('Entrar', "O e-mail informado já está em uso.")
+        Alert.alert('Mensagem', "O e-mail informado já está em uso.")
       }else if (error.code === 'auth/invalid-email') {
-        Alert.alert('Entrar', "O e-mail informado é inválido.")
-      }else if (error.code === 'auth/wrong-password') {
-        Alert.alert('Entrar', "Dados incorretos!\nTente novamente.")
+        Alert.alert('Mensagem', "O e-mail informado é inválido.")
       }else{
-        Alert.alert('Entrar', error.message);
+        Alert.alert('Mensagem', error.message);
       }
+      setIsLoading(false);
     })
     .finally(() => setIsLoading(false))
-  }
-
-  const recuperarSenha = async () => {
-    setIsLoading(true);
-    auth().sendPasswordResetEmail(email).then(() => {
-      Alert.alert('Recuperação de senha', 'Foi enviado um e-mail para ' + email);
-    }).catch(error => {
-      Alert.alert('Recuperação de senha', error.message);
-    }).finally(() => {
-    setIsLoading(false);
-    })
-
   }
 
   return (
@@ -67,36 +49,45 @@ export default function CreateAccount(props) {
       {isFocused && (
         <>
           <Animatable.View
-              animation="fadeIn"
+              animation="fadeInDown"
               delay={500}
               style={styles.logo}
             >
             <LottieView
-              source={require('../../assets/login.json')}
+              source={require('../../assets/create.json')}
               autoPlay
+              loop={false}
             />
           </Animatable.View>
-          
 
           <Animatable.View animation="fadeInUp" style={styles.containerForm}>
-          <Text style={{
+            <Text style={{
               fontSize: 30,
               marginLeft: 8,
               fontWeight: 'bold'
               }}>
-                Entrar
+                Criar Conta
               </Text>
             
+              <TextInput 
+            placeholderTextColor="#C0C0C0"
+            placeholder="Nome"
+            style={styles.input} 
+            defaultValue={nome} 
+            onChangeText={(text) => setNome(text)}
+            />
+
             <TextInput 
-            placeholderTextColor="#e8e8e8"
+            placeholderTextColor="#C0C0C0"
             placeholder="E-mail"
             style={styles.input} 
+            keyboardType="email-address"
             defaultValue={email} 
             onChangeText={(text) => setEmail(text)}
             />
 
             <TextInput 
-            placeholderTextColor="#e8e8e8"
+            placeholderTextColor="#C0C0C0"
             placeholder="Senha"
             secureTextEntry={true} 
             passwordRules="*" 
@@ -112,35 +103,21 @@ export default function CreateAccount(props) {
               {isLoading ? (
                 <Text style={styles.buttonText}>Aguarde...</Text>  
               ) : (
-                <Text style={styles.buttonText}>Entrar</Text>
+                <Text style={styles.buttonText}>Criar conta</Text>
               )}
             </TouchableOpacity>
         </Animatable.View>
-        <Animatable.View animation="fadeInUp" style={{ 
-            paddingTop: 20,
-            paddingHorizontal: 12,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            
+          <Animatable.View animation="fadeInUp" style={{ 
+            marginTop: 20,
             }}>
             <TouchableOpacity style={{
               alignItems: "center",
               flexDirection: 'row',
               justifyContent: 'center',
               padding: 6,
-            }} onPress={() => props.navigation.push('CreateAccount')}>
-              <AntDesign name="adduser" size={20} color="#4A148C"/>
-              <Text style={{color: '#4A148C', marginLeft: 4}}>Criar Conta</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{
-              alignItems: "center",
-              flexDirection: 'row',
-              justifyContent: 'center',
-              padding: 6,
-            }} onPress={recuperarSenha}>
-              <Text style={{color: '#4A148C', marginRight: 4}}>Esqueci minha Senha</Text>
-              <AntDesign name="mail" size={20} color="#4A148C"/>
+            }} onPress={() => props.navigation.push('SignIn')}>
+              <AntDesign name="arrowleft" size={20} color="#4A148C"/>
+              <Text style={{color: '#4A148C', marginLeft: 4}}>Já tenho uma conta</Text>
             </TouchableOpacity>
           </Animatable.View>
         </>
@@ -152,30 +129,19 @@ export default function CreateAccount(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e8e8e8",
-    justifyContent: 'center'
+    backgroundColor: "#f6f6f6",
+    justifyContent: "center",
   },
 
   logo: {
     padding: "10%",
     height: 200,
     alignItems: "center",
-    justifyContent: "center"
-  },
-
-  containerHeader: {
-    paddingTop: "14%",
-    paddingStart: "5%",
-    flexDirection: 'row',
-    alignItems: "baseline"
-  },
-
-  message: {
-    fontSize: 24,
-    color: "#4A148C",
+    justifyContent: "center",
   },
 
   containerForm: {
+    paddingTop: 20,
     paddingStart: "5%",
     paddingEnd: "5%",
   },
@@ -187,23 +153,22 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    borderWidth: 0.5,
-    borderColor: '#CCC',
+    borderWidth: 1,
+    borderColor: '#C0C0C0',
     backgroundColor: "#FFF",
     borderRadius: 12,
     color: "#4A148C",    
     height: 48,
     marginBottom: 12,
-    fontSize: 16,    
+    fontSize: 14,    
     padding: 8,
   },
 
   button: {
     backgroundColor: "#4A148C",
     width: "100%",
-    borderRadius: 4,
+    borderRadius: 12,
     paddingVertical: 8,
-    marginTop: 14,
     justifyContent: "center",
     alignItems: "center",
   },
