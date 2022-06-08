@@ -9,15 +9,42 @@ import {
 
 import * as Animatable from "react-native-animatable";
 import { useIsFocused } from '@react-navigation/native';
-import { useAuth } from '../../providers/auth';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignIn() {
   const isFocused = useIsFocused();
-  const [nome, setNome] = useState('');
-  const {usuario, dispatch} = useAuth();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  
   const handleGravar = () => {
-    dispatch({nome},'LOGGIN');
+    setIsLoading(true);
+
+    auth().createUserWithEmailAndPassword(email, senha)
+    .then((user) => {
+      console.log('Success login', user);
+    }).
+    catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+        auth().signInWithEmailAndPassword(email, senha)
+        .then((user) => {
+          console.log(user);
+        }).catch(() => {
+          console.log('That email address is invalid!');
+        }).finally(()=>{
+          setIsLoading(false);
+        });
+      }else{
+        setIsLoading(false);
+      }
+  
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+      
+    })
   }
 
   return (
@@ -29,19 +56,27 @@ export default function SignIn() {
             delay={500}
             style={styles.containerHeader}
           >
-            <Text style={styles.message}>Bem-vindo(a), </Text>
-            <Text style={styles.username}>{usuario.nome ? usuario.nome : 'Usuário'}</Text>
+            <Text style={styles.message}>Bem-vindo(a)!</Text>
           </Animatable.View>
 
           <Animatable.View animation="fadeInUp" style={styles.containerForm}>
-            <Text style={styles.title}>Nome</Text>
-            <TextInput style={styles.input} onChange={(value) => setNome(value)}/>
+            
+            <Text style={styles.title}>E-mail</Text>
+            <TextInput style={styles.input} defaultValue={email} onChangeText={(text) => setEmail(text)}/>
+
+            <Text style={styles.title}>Senha</Text>
+            <TextInput secureTextEntry={true} passwordRules="*" style={styles.input} defaultValue={senha} onChangeText={(text) => setSenha(text)}/>
 
             <TouchableOpacity
               style={styles.button}
               onPress={handleGravar}
+              disabled={isLoading}
             >
-              <Text style={styles.buttonText}>Gravar</Text>
+              {isLoading ? (
+                <Text style={styles.buttonText}>Aguarde...</Text>  
+              ) : (
+                <Text style={styles.buttonText}>Gravar</Text>
+              )}
             </TouchableOpacity>
         </Animatable.View>
         </>

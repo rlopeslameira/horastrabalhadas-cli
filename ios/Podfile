@@ -21,6 +21,8 @@ target 'horastrabalhadas' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNFBAuth', :path => '../node_modules/@react-native-firebase/auth'
+
   target 'horastrabalhadasTests' do
     inherit! :complete
     # Pods for testing
